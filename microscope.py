@@ -2,7 +2,7 @@
 import pygame,sys
 from pygame.locals import *
 import pygame.camera
-import ConfigParser
+import configparser
 import os
 
 class Capture(object):
@@ -88,7 +88,7 @@ class Capture(object):
 
 if __name__ == '__main__':
     app_dir = os.path.dirname(os.path.realpath(__file__))
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(os.path.join(app_dir,'config.ini'))
     pygame.init()
     pygame.mouse.set_visible(False)
