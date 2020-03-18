@@ -5,6 +5,7 @@ import pygame.camera
 import configparser
 import os
 
+
 class Capture(object):
     def __init__(self,config):
         self.foreground = (239,127,26)
