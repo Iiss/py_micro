@@ -20,6 +20,7 @@ class Capture(object):
 
         #config.get('Locale','no_camera_msg')
         self.scale_x = float(self.screen_w) / self.cam_w
+        self.scale_y = float(self.screen_h) / self.cam_h
         self.size = (self.cam_w, self.cam_h)
         self.error_surface = None
 
@@ -61,17 +62,22 @@ class Capture(object):
             return
             
         scaled_h = int(self.cam_h * self.scale_x)
-        # if you don't want to tie the framerate to the camera, you can check 
-        # if the camera has an image ready.  note that while this works
-        # on most cameras, some will never return true.
-        #if self.cam.query_image():
-        self.snapshot = pygame.transform.scale(self.cam.get_image(),(self.screen_w, scaled_h))
+        scaled_w = int(self.cam_w * self.scale_y)
+        if scaled_h>=self.screen_h:
+            # if you don't want to tie the framerate to the camera, you can check 
+            # if the camera has an image ready.  note that while this works
+            # on most cameras, some will never return true.
+            #if self.cam.query_image():
+            self.snapshot = pygame.transform.scale(self.cam.get_image(),(self.screen_w, scaled_h))
+            # blit it to the display surface.  simple!
+            clip_rect = Rect(0,.5*abs(self.screen_h-scaled_h),self.screen_w, self.screen_h)
+        else:
+            self.snapshot = pygame.transform.scale(self.cam.get_image(),(scaled_w,self.screen_h))
+            clip_rect = Rect(.5*abs(self.screen_w-scaled_w),0,self.screen_w, self.screen_h)
 
-        # blit it to the display surface.  simple!
-        clip_rect = Rect(0,.5*abs(self.screen_h-scaled_h),self.screen_w, self.screen_h)
         self.display.blit(self.snapshot.subsurface(clip_rect), (0,0))
         pygame.display.flip()
-
+        
     def main(self):
         going = True
         while going:
