@@ -7,7 +7,7 @@ import os
 
 class Capture(object):
     def __init__(self,config):
-        self.foreground = (239,127,26)
+        self.foreground = (195,246,249)
         self.background = (0,0,0)
         self.cam = None
         self.cam_w = config.getint('Viewport','webcam_w')
@@ -15,8 +15,8 @@ class Capture(object):
         self.screen_w = config.getint('Viewport','screen_w')
         self.screen_h = config.getint('Viewport','screen_h')
         self.no_cam_msg = u'Микроскоп не обнаружен.'
-        self.no_cam_desc = u'Проверьте подключение микроскопа и перезагрузите компьютер'
-
+        self.no_cam_desc1 = u'Проверьте подключение микроскопа' 
+        self.no_cam_desc2 = u'и перезагрузите компьютер'
         #config.get('Locale','no_camera_msg')
         self.scale_x = float(self.screen_w) / self.cam_w
         self.scale_y = float(self.screen_h) / self.cam_h
@@ -44,15 +44,17 @@ class Capture(object):
         self.error_surface = pygame.surface.Surface((self.screen_w,self.screen_h))
         self.error_surface.fill(self.background)
         msg = font.render(self.no_cam_msg,True,self.foreground)
-        desc = font.render(self.no_cam_desc,True,self.foreground)
-        error_img = pygame.image.load("science.png").convert_alpha()
+        desc1 = font.render(self.no_cam_desc1,True,self.foreground)
+        desc2 = font.render(self.no_cam_desc2,True,self.foreground)
+        error_img = pygame.image.load("microScope_n.png").convert_alpha()
 
         self.error_surface.blit(error_img,(
                                 .5*(self.screen_w-error_img.get_width()),
                                 .5*(self.screen_h-error_img.get_height() - 40
                                 )))
 
-        self.error_surface.blit(desc,(.5*(self.screen_w-desc.get_width()),.5*(self.screen_h+error_img.get_height())))
+        self.error_surface.blit(desc1,(.5*(self.screen_w-desc1.get_width()),.5*(self.screen_h+error_img.get_height())))
+        self.error_surface.blit(desc2,(.5*(self.screen_w-desc2.get_width()),.5*(self.screen_h+error_img.get_height()+40)))
         self.display.blit(self.error_surface, (0,0))
         pygame.display.flip()
 
@@ -76,7 +78,7 @@ class Capture(object):
 
         self.display.blit(self.snapshot.subsurface(clip_rect), (0,0))
         pygame.display.flip()
-        
+
     def main(self):
         going = True
         while going:
@@ -99,6 +101,6 @@ if __name__ == '__main__':
     pygame.init()
     pygame.mouse.set_visible(False)
     pygame.font.init()
-    font = pygame.font.Font("Bicubik.OTF",10)
+    font = pygame.font.Font("Bicubik.OTF",18)
     pygame.camera.init()
     cap = Capture(config).main()
